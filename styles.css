@@ -1,0 +1,472 @@
+/*========================================*/
+/* Pico Edit Plugin
+/* By: Andreas Lenhardt
+/* Forked from: Mattia Roccoberton
+/* https://github.com/blocknotes/pico_edit
+/*========================================*/
+
+
+table {
+	width: 100%;
+}
+.pure-button {
+	border-radius: 0 !important;
+	width: 25%;
+	background-color: gainsboro;
+	border-right: 1px solid #cbcbcb !important;
+	background-image: none;
+}
+.pure-button:focus {
+	background-image: none;
+}
+.pure-button:hover,
+.pure-button:active {
+	background-color: #C9C9C9;
+	background-image: none;
+}
+.pure-button-group {
+	border-left: 1px solid #cbcbcb;
+	border-radius: 0 !important;
+}
+.sidebar {
+	background-color: #F4F4F4;
+}
+.text-center {
+	text-align: center;
+}
+#card {
+	width: 30vw;
+	margin-left: 35vw;
+	height: 50vh;
+	margin-top: 20vh;
+}
+#password {
+	width: 60%;
+	margin-left: 20%;
+	text-align: center;
+	border-radius: 0;
+}
+#header {
+	font-size: 2rem;
+	padding-bottom: 1.2rem;
+	padding-top: 1.2rem;
+	background-color: #D2D2D2;
+	border: 1px solid #8D8D8D;
+}
+#content {
+	font-size: 1rem;
+	padding-top: 4rem;
+	padding-bottom: 4rem;
+	background-color: #EAEAEA;
+	border-left: 1px solid #8D8D8D;
+	border-right: 1px solid #8D8D8D;
+	border-bottom: 1px solid #8D8D8D;
+}
+.pure-button-submit {
+	background-color: #C9C9C9;
+}
+.submit {
+	padding-top: 2rem;
+}
+.error {
+	color: red;
+	padding-bottom: 2rem;
+}
+a,
+a:visited {
+	color: #222;
+}
+.button-toggle {
+	width: 100%;
+	border-bottom: 1px solid #cbcbcb;
+}
+@media screen and (min-width: 48em) {
+	.hidden-sm-md {
+		display: none;
+	}
+}
+@media screen and (max-width: 35.5em) {
+	#card {
+		width: 90vw;
+		margin-left: 5vw;
+		margin-top: 10vh;
+	}
+}
+@media screen and (min-width: 35.5em) {
+	#card {
+		width: 80vw;
+		margin-left: 10vw;
+		margin-top: 10vh;
+	}
+}
+@media screen and (min-width: 48em) {
+	#card {
+		width: 70vw;
+		margin-left: 15vw;
+	}
+}
+@media screen and (min-width: 64em) {
+	#card {
+		width: 60vw;
+		margin-left: 20vw;
+	}
+}
+@media screen and (min-width: 80em) {
+	#card {
+		width: 50vw;
+		margin-left: 25vw;
+	}
+}
+#preview-btn,
+#edit-btn {
+	width: 100%;
+	border-bottom: 1px solid #cbcbcb;
+}
+
+
+
+/* Reset Styles1
+/*---------------------------------------------*/
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+font,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: inherit;
+	vertical-align: baseline;
+}
+body {
+	line-height: 1;
+	color: black;
+	background: white;
+}
+table {
+	border-collapse: separate;
+	border-spacing: 0;
+}
+caption,
+th,
+td {
+	text-align: left;
+	font-weight: normal;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+	content: "";
+}
+blockquote,
+q {
+	quotes: "" "";
+}
+
+/* HTML5 tags */
+
+header,
+section,
+footer,
+aside,
+nav,
+article,
+figure {
+	display: block;
+}
+
+/* hand cursor on clickable input elements */
+
+label,
+input[type=button],
+input[type=submit],
+button {
+	cursor: pointer;
+}
+
+/* make buttons play nice in IE:   
+    www.viget.com/inspire/styling-the-button-element-in-internet-explorer/ */
+
+button {
+	width: auto;
+	overflow: visible;
+}
+.hidden {
+	visibility: hidden;
+}
+
+/* Main Styles
+/*---------------------------------------------*/
+
+body {
+	font: 14px/1.8em 'Open Sans', Helvetica, Arial, Helvetica, sans-serif;
+	color: #222;
+	background: #F9FBFC;
+	overflow: hidden;
+	-webkit-font-smoothing: antialiased;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+#main {
+	min-width: 0px;
+}
+#epiceditor {
+	height: 100vh;
+}
+#saving {
+	position: fixed;
+	bottom: 10px;
+	right: 25px;
+	z-index: 100;
+	background: #8dc92d;
+	color: #fff;
+	padding: 2px 10px;
+	opacity: 0;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	-webkit-transition: opacity 0.3s ease-out;
+	-moz-transition: opacity 0.3s ease-out;
+	-ms-transition: opacity 0.3s ease-out;
+	-o-transition: opacity 0.3s ease-out;
+	transition: opacity 0.3s ease-out;
+}
+#saving.active {
+	opacity: 1;
+}
+
+/* Misc Styles
+/*---------------------------------------------*/
+
+#cover {
+	position: fixed;
+	margin: auto;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+	background: #909090;
+	z-index: 99;
+	opacity: 0.5;
+	display: none;
+}
+#popup {
+	position: fixed;
+	margin: auto;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 800px;
+	height: 500px;
+	border: 2px solid black;
+	z-index: 100;
+	background: white;
+	padding: 20px;
+	padding-bottom: 40px;
+	display: none;
+}
+.popupcontent {
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+.popupbuttons {
+	border: 1px solid green;
+	width: 100%;
+	height: 20px;
+	margin-bottom: 20px;
+}
+.closegadget {
+	position: fixed;
+	margin-left: 805px;
+	margin-top: -35px;
+	background: #f9f9fa;
+	background: -moz-linear-gradient(top, #ffffff 1%, #f9f9fa 20%, #dee0e2 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(1%, #ffffff), color-stop(20%, #f9f9fa), color-stop(100%, #dee0e2));
+	background: -webkit-linear-gradient(top, #ffffff 1%, #f9f9fa 20%, #dee0e2 100%);
+	background: -o-linear-gradient(top, #ffffff 1%, #f9f9fa 20%, #dee0e2 100%);
+	background: -ms-linear-gradient(top, #ffffff 1%, #f9f9fa 20%, #dee0e2 100%);
+	background: linear-gradient(to bottom, #ffffff 1%, #f9f9fa 20%, #dee0e2 100%);
+	filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#dee0e2', GradientType=0);
+	border: 2px solid black;
+	-webkit-border-radius: 15px;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	z-index: 101;
+	width: 30px;
+	height: 30px;
+	text-align: center;
+	font-weight: bold;
+	padding-left: 4px;
+	padding-top: 4px;
+}
+.pushpullbutton {
+	display: none;
+}
+.commitbutton {
+	display: none;
+}
+#popuptable {
+	border-left: 1px solid #c0c0c0;
+	border-top: 1px solid #c0c0c0;
+}
+#popuptable td {
+	border-right: 1px solid #c0c0c0;
+	border-bottom: 1px solid #c0c0c0;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+#popuptable th {
+	font-weight: bold;
+	border-right: 1px solid #c0c0c0;
+	border-bottom: 1px solid #c0c0c0;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+#pushpullbuttons {
+	padding-top: 10px;
+}
+
+/* --- */
+
+[data-icon]:before {
+	content: attr(data-icon);
+}
+[data-icon]:before,
+[class^="icon-"],
+[class*=" icon-"] {
+	font-family: 'icomoon' !important;
+	speak: none;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	position: relative;
+	top: 1px;
+	z-index: 0;
+}
+.icon-pencil:before {
+	content: "\e903";
+}
+.icon-image:before {
+	content: "\e904";
+}
+.icon-file-text:before {
+	content: "\e900";
+}
+.icon-file-empty:before {
+	content: "\e901";
+}
+.icon-file-text2:before {
+	content: "\e902";
+}
+.icon-floppy-disk:before {
+	content: "\e905";
+}
+.icon-enlarge:before {
+	content: "\e906";
+}
+.icon-enlarge2:before {
+	content: "\e907";
+}
+.icon-equalizer2:before {
+	content: "\e908";
+}
+.icon-cogs:before {
+	content: "\e909";
+}
+.icon-bin:before {
+	content: "\e90a";
+}
+.icon-switch:before {
+	content: "\e90b";
+}
+.icon-download2:before {
+	content: "\e90c";
+}
+.icon-upload2:before {
+	content: "\e90d";
+}
+.icon-eye:before {
+	content: "\e90e";
+}
+.icon-eye-blocked:before {
+	content: "\e90f";
+}
+.icon-plus:before {
+	content: "\e910";
+}
+.icon-cross:before {
+	content: "\e911";
+}
+.icon-loop2:before {
+	content: "\e912";
+}
+.icon-github:before {
+	content: "\e913";
+}

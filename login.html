@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Login</title>
+	<meta name="robots" content="noindex, nofollow" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css">
+	<link rel="stylesheet" href="{{ base_url }}/plugins/pico_edit/styles.css" type="text/css" />
+</head>
+
+<body>
+
+	<div id="card" class="text-center">
+		<div id="header">
+			<h1>Login&nbsp;<i class="fa fa-sign-in" aria-hidden="true"></i></h1>
+		</div>
+
+		<div id="content">
+			<form class="pure-form pure-form-stacked" id="login-form" method="post" action="">
+				<fieldset>
+
+					{% if login_error %}
+					<p class="error">{{ login_error }}</p>
+					{% endif %}
+
+					<input type="password" name="password" id="password" placeholder="Password" autofocus>
+
+					<div class="submit">
+						<button type="submit" class="pure-button pure-button-submit">Sign in</button>
+					</div>
+
+				</fieldset>
+			</form>
+		</div>
+
+	</div>
+
+
+</body>
+
+</html>

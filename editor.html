@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Pico Edit</title>
+	<meta name="robots" content="noindex, nofollow" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- Font Awesome v. 4.7.0 --->
+	<link rel="stylesheet" href="{{ base_url }}/plugins/pico_edit/fonts/css/font-awesome.min.css">
+	<!-- Pure CSS * Main -->
+	<link rel="stylesheet" href="{{ base_url }}/plugins/pico_edit/libs/pure-css/pure-min.css">
+	<!-- Pure CSS * Grid -->
+	<link rel="stylesheet" href="{{ base_url }}/plugins/pico_edit/libs/pure-css/grids-responsive-min.css">
+	<!-- Custom styles -->
+	<link rel="stylesheet" href="{{ base_url }}/plugins/pico_edit/styles.css" type="text/css" />
+
+</head>
+
+<body>
+
+	<!-- Save snackbar -->
+	<div id="saving">Saving...</div>
+
+	<!-- Menu button * hidden on medium & large screens -->
+	<div class="hidden-sm-md">
+		<button id="hide" class="pure-button button-toggle">Menu</button>
+	</div>
+
+
+	<!-- Grid -->
+	<div class="pure-g">
+
+		<!-- Sidebar -->
+		<div class="pure-u-1 pure-u-md-1-5 pure-u-lg-1-5 pure-u-xl-1-5 sidebar">
+
+			<!-- Button group -->
+			<div class="pure-button-group controls" role="pure-button group">
+				<a href="#" type="button" class="pure-button savebutton" title="Save"><i class="fa fa-floppy-o" aria-hidden="true"></i></a>
+				<a href="#" type="button" class="pure-button new" title="New"><i class="fa fa-plus" aria-hidden="true"></i></a>
+				<a href="#" type="button" class="pure-button clearcachebutton" title="Clear Cache"><i class="fa fa-refresh" aria-hidden="true"></i></a>
+				<a href="{{ pico_edit_url }}/logout" type="button" class="pure-button logout" id="logout" title="Logout"><i class="fa fa-sign-out" aria-hidden="true"></i></a>
+			</div>
+
+			<!-- File list -->
+			<div>
+				<table class="pure-table pure-table-horizontal nav">
+					<tbody>
+
+						{% if config.pico_edit_options %}
+						<tr>
+							<td colspan="3"><a href="#" data-url="conf" class="post page-options"><i>config options</i></a></td>
+						</tr>
+						{% endif %} {% if config.pico_edit_404 %}
+						<tr>
+							<td colspan="3"><a href="#" data-url="/404" class="post page-404"><i>404</i></a></td>
+						</tr>
+						{% endif %} {% for page in pages %}
+						<tr>
+							<td><a href="#" data-url="{{ page.id }}" class="post">/{{ page.id }}</a></td>
+							<td><a href="{{ page.url }}" target="_blank" class="view" title="View"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
+							<td><a href="#" data-url="{{ page.id }}" class="delete" title="Delete"><i class="fa fa-trash-o" aria-hidden="true"></i></a></td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Sidebar END -->
+		</div>
+
+		<!-- Main window -->
+		<div class="pure-u-1 pure-u-md-4-5 pure-u-lg-4-5 pure-u-xl-4-5">
+
+			<!-- Main (contains Editor) -->
+			<div id="main">
+
+				<!-- Edit and preview buttons -->
+				<div class="pure-g">
+					<div class="pure-u-1-2">
+						<button id="preview-btn" class="pure-button"><i class="fa fa-eye" aria-hidden="true"></i>&nbsp;Preview</button>
+					</div>
+					<div class="pure-u-1-2">
+						<button id="edit-btn" class="pure-button"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;Edit</button>
+					</div>
+				</div>
+
+
+				<!-- Editor -->
+				<div id="epiceditor"></div>
+
+				<script src="{{ base_url }}/plugins/pico_edit/libs/jquery-1.12.3.min.js"></script>
+				<!-- <script src="{{ base_url }}/plugins/pico_edit/top_up-1.7.2/top_up-min.js"></script> -->
+				<script src="{{ base_url }}/plugins/pico_edit/libs/epiceditor/js/epiceditor.min.js"></script>
+
+
+
+				<script>
+					$(document).ready(function() {
+
+						// Toggle menu
+						$("#hide").click(function() {
+							$(".sidebar").toggleClass("hidden");
+						});
+
+						// Logout is REQUIRED
+						window.onbeforeunload = function() {
+							return "Did you log out?"
+						}
+
+						// Prevent close warning for logout button
+						document.getElementById('logout').onclick = function() {
+							window.onbeforeunload = null;
+						};
+
+						// Switch editor to preview mode
+						$("#preview-btn").click(function() {
+							editor.preview();
+						});
+						
+						// Switch editor to edit mode
+						$("#edit-btn").click(function() {
+							editor.edit();
+						});
+
+						var unsaved = false;
+						var editor = new EpicEditor({
+							container: 'epiceditor',
+							basePath: '{{ base_url }}/plugins/pico_edit/libs/epiceditor',
+							clientSideStorage: false,
+							useNativeFullscreen: false,
+							file: {
+								name: 'epiceditor',
+								defaultContent: '',
+								autoSave: 5000
+							},
+							theme: {
+								base: '{{ base_url }}/plugins/pico_edit/libs/epiceditor/themes/base/epiceditor.css',
+								preview: '{{ base_url }}/plugins/pico_edit/libs/epiceditor/themes/preview/github.css',
+								editor: '{{ base_url }}/plugins/pico_edit/libs/epiceditor/themes/editor/epic-light.css'
+							},
+							button: {
+								preview: false,
+								fullscreen: false,
+								bar: false
+							},
+							focusOnLoad: true
+						}).load();
+
+						$.post('{{ pico_edit_url }}/open', {
+							file: "index"
+						}, function(data) {
+							$('#epiceditor').data('currentFile', "index");
+							editor.importFile('epiceditor', data);
+							unsaved = false;
+							document.title = document.title.replace(' *', '');
+						});
+
+						$(editor.getElement('editor')).on('keyup', function() {
+							if (!unsaved) {
+								unsaved = true;
+								document.title += ' *';
+							}
+						});
+
+						// New
+						$('.controls .new').on('click', function(e) {
+							e.preventDefault();
+							var title = prompt('Enter page title; optionally with path, example: sub folder/my page', '');
+							if (title != null && title != '') {
+								$.post('{{ pico_edit_url }}/new', {
+									title: title
+								}, function(data) {
+									if (data.error) {
+										alert(data.error);
+									} else {
+										$('.nav .post').removeClass('open');
+										$('#epiceditor').data('currentFile', data.file);
+										editor.importFile('epiceditor', data.content);
+										unsaved = false;
+										document.title = document.title.replace(' *', '');
+										$('.nav').append('<tr><td><a href="#" data-url="' + data.file + '" class="post list-group-item">/' + data.file + '</a></td><td><a href="' + data.url + '" target="_blank" class="view" title="View"><i class="fa fa-eye" aria-hidden="true"></i></a></td><td><a href="#" data-url="' + data.file + '" class="delete" title="Delete"><i class="fa fa-trash-o" aria-hidden="true"></i></a></td></tr>')
+									}
+								}, 'json');
+							}
+						});
+
+						// Open post
+						$('.nav').on('click', '.post', function(e) {
+							e.preventDefault();
+							if (unsaved && !confirm('You have unsaved changes. Are you sure you want to leave this post?')) return false;
+							$('.nav .post, .post').removeClass('open');
+							$(this).addClass('open');
+
+							var fileUrl = $(this).attr('data-url');
+							$.post('{{ pico_edit_url }}/open', {
+								file: fileUrl
+							}, function(data) {
+								$('#epiceditor').data('currentFile', fileUrl);
+								editor.importFile('epiceditor', data);
+								unsaved = false;
+								document.title = document.title.replace(' *', '');
+							});
+						});
+
+						// Save post
+						editor.on('autosave', function() {
+							$('#saving').text('Saving...').addClass('active');
+							$.post('{{ pico_edit_url }}/save', {
+								file: $('#epiceditor').data('currentFile'),
+								content: editor.exportFile()
+							}, function(data) {
+								$('#saving').text('Saved');
+								unsaved = false;
+								document.title = document.title.replace(' *', '');
+								setTimeout(function() {
+									$('#saving').removeClass('active');
+								}, 1000);
+							});
+						});
+
+						// Save on preview
+						editor.on('preview', function() {
+							editor.emit('autosave');
+						});
+
+						// btn - Delete
+						$('.nav').on('click', '.delete', function(e) {
+							e.preventDefault();
+							if (!confirm('Are you sure you want to delete this file?')) return false;
+							$('.nav .post').removeClass('open');
+
+							var tr = $(this).parents('tr');
+							var fileUrl = $(this).attr('data-url');
+							$.post('{{ pico_edit_url }}/delete', {
+								file: fileUrl
+							}, function(data) {
+								tr.remove();
+								$('#epiceditor').data('currentFile', '');
+								editor.importFile('epiceditor', '');
+								unsaved = false;
+								document.title = document.title.replace(' *', '');
+							});
+						});
+
+						// btn - Save
+						$('.controls').on('click', '.savebutton', function(e) {
+							e.preventDefault();
+							$('#saving').text('Saving...').addClass('active');
+							$.post('{{ pico_edit_url }}/save', {
+								file: $('#epiceditor').data('currentFile'),
+								content: editor.exportFile()
+							}, function(data) {
+								$('#saving').text('Saved');
+								unsaved = false;
+								document.title = document.title.replace(' *', '');
+								setTimeout(function() {
+									$('#saving').removeClass('active');
+								}, 1000);
+							});
+						});
+
+						// btn - Clear cache
+						$('.controls').on('click', '.clearcachebutton', function(e) {
+							e.preventDefault();
+							$('#saving').text('Clearing...').addClass('active');
+							$.post('{{ pico_edit_url }}/clearcache', {}, function(data) {
+								$('#saving').text('Cache cleared');
+								setTimeout(function() {
+									$('#saving').removeClass('active');
+								}, 1000);
+							});
+						});
+
+
+						// Window resize
+						$('body,#main,#epiceditor').height($(window).height());
+						$(window).resize(function() {
+							$('body,#main,#epiceditor').height($(window).height());
+							editor.reflow();
+						});
+
+					});
+
+				</script>
+
+				<!-- Main (contains Editor) END -->
+			</div>
+
+			<!-- Main window END -->
+		</div>
+
+		<!-- Grid END -->
+	</div>
+
+
+</body>
+
+</html>
