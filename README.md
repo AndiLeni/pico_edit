@@ -35,7 +35,12 @@ Options (Pico "config/config.php"):
 	$config['pico_edit_options'] = false;			// Disallow options editing
 	$config['pico_edit_default_author'] = 'Me';		// Default author for new pages
 
-
+Pictures
+--------
+![Desktop Login](https://github.com/AndiLeni/pico_edit/blob/master/screenshot-1.png)
+![Dektop Admin](https://github.com/AndiLeni/pico_edit/blob/master/screenshot-2.png)
+![Mobile Menu visible](https://github.com/AndiLeni/pico_edit/blob/master/screenshot-3.png)
+![Mobile Menu hidden](https://github.com/AndiLeni/pico_edit/blob/master/screenshot-4.png)
 
 
 Editing Pico options
