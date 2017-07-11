@@ -1,18 +1,29 @@
 /*========================================*/
+
+
 /* Pico Edit Plugin
 /* By: Andreas Lenhardt
 /* https://github.com/AndiLeni/pico_edit
 /* ---------- */
+
+
 /* Forked from: Mattia Roccoberton
 /* https://github.com/blocknotes/pico_edit
 /*========================================*/
 
-
-.post {
+.scrollbar {
+	overflow: auto;
+	height: 100vh;
+}
+td {
 	word-break: break-all;
 }
 table {
 	width: 100%;
+	border-top: 0px !important;
+}
+table:last-child {
+	margin-bottom: 33px;
 }
 .pure-button {
 	border-radius: 0 !important;
@@ -32,11 +43,11 @@ table {
 .pure-button-group {
 	border-left: 1px solid #cbcbcb;
 	border-radius: 0 !important;
+	border-bottom: 1px solid #cbcbcb;
 }
 .sidebar {
 	background-color: #F4F4F4;
-	overflow: auto;
-	height: 100vh;
+	/* 	height: 100vh; */
 }
 .text-center {
 	text-align: center;
@@ -108,7 +119,7 @@ a:visited {
 }
 @media screen and (max-width: 48em) {
 	table:last-child {
-		margin-bottom: 35px;
+		margin-bottom: 67px;
 	}
 }
 @media screen and (min-width: 48em) {

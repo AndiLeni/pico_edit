@@ -45,26 +45,28 @@
 
 			<!-- File list -->
 			<div>
-				<table class="pure-table pure-table-horizontal nav">
-					<tbody>
+				<div class="scrollbar">
+					<table class="pure-table pure-table-horizontal nav">
+						<tbody>
 
-						{% if config.pico_edit_options %}
-						<tr>
-							<td colspan="3"><a href="#" data-url="conf" class="post page-options"><i>config options</i></a></td>
-						</tr>
-						{% endif %} {% if config.pico_edit_404 %}
-						<tr>
-							<td colspan="3"><a href="#" data-url="/404" class="post page-404"><i>404</i></a></td>
-						</tr>
-						{% endif %} {% for page in pages %}
-						<tr>
-							<td><a href="#" data-url="{{ page.id }}" class="post">/{{ page.id }}</a></td>
-							<td><a href="{{ page.url }}" target="_blank" class="view" title="View"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
-							<td><a href="#" data-url="{{ page.id }}" class="delete" title="Delete"><i class="fa fa-trash-o" aria-hidden="true"></i></a></td>
-						</tr>
-						{% endfor %}
-					</tbody>
-				</table>
+							{% if config.pico_edit_options %}
+							<tr>
+								<td colspan="3"><a href="#" data-url="conf" class="post page-options"><i>config options</i></a></td>
+							</tr>
+							{% endif %} {% if config.pico_edit_404 %}
+							<tr>
+								<td colspan="3"><a href="#" data-url="/404" class="post page-404"><i>404</i></a></td>
+							</tr>
+							{% endif %} {% for page in pages %}
+							<tr>
+								<td><a href="#" data-url="{{ page.id }}" class="post">/{{ page.id }}</a></td>
+								<td><a href="{{ page.url }}" target="_blank" class="view" title="View"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
+								<td><a href="#" data-url="{{ page.id }}" class="delete" title="Delete"><i class="fa fa-trash-o" aria-hidden="true"></i></a></td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
 			</div>
 
 			<!-- Sidebar END -->
@@ -118,7 +120,7 @@
 						$("#preview-btn").click(function() {
 							editor.preview();
 						});
-						
+
 						// Switch editor to edit mode
 						$("#edit-btn").click(function() {
 							editor.edit();
